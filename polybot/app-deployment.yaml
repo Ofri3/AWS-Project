@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app-deployment
+  labels:
+    app: python-app
+spec:
+  replicas: 2  # Number of replicas for the Python app deployment
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      containers:
+      - name: python-app
+        image: 023196572641.dkr.ecr.us-east-2.amazonaws.com/libermanofri/app-repo:app-image-latest  # Replace with your actual Python app image
+        ports:
+        - containerPort: 8443  # Assuming your Python app runs on port 8443
+        env:
+        - name: TELEGRAM_TOKEN  # This should match the environment variable used in your app.py
+          valueFrom:
+            secretKeyRef:
+              name: telegram-token-secret  # Name of the Kubernetes Secret
+              key: TELEGRAM_TOKEN        # The key in the secret that holds the Telegram token
+      imagePullSecrets:
+      - name: regcred  # Assuming you have an image pull secret for private Docker registry

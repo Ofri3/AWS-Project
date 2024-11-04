@@ -43,26 +43,22 @@ pipeline {
         }
         stage('Install Python Requirements') {
             steps {
-                container('jenkins-agent') {
-                    // Install Python dependencies
-                    sh """
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip install pytest unittest2 pylint flask telebot Pillow loguru matplotlib
-                    """
-                }
+            // Install Python dependencies
+                sh """
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install pytest unittest2 pylint flask telebot Pillow loguru matplotlib
+                """
             }
         }
         stage('Unittest') {
             steps {
-                container('jenkins-agent') {
-                    // Run unittests
-                    sh """
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        python -m pytest --junitxml results.xml polybot/test
-                    """
-                }
+            // Run unittests
+                sh """
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    python -m pytest --junitxml results.xml polybot/test
+                """
             }
         }
         stage('ECR Login') {

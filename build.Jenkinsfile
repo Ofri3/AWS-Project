@@ -21,7 +21,7 @@ pipeline {
         ACCOUNT_ID = '023196572641'
         APP_IMAGE = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/libermanofri/app-repo:app-image-0.3.${BUILD_NUMBER}"
         CHART_VERSION = "0.1.${BUILD_NUMBER}"
-        KUBECONFIG = "${env.WORKSPACE}/ec2-user/.kube/config"
+        KUBECONFIG = "home/ec2-user/.kube/config"
     }
 
     stages {
@@ -93,7 +93,7 @@ pipeline {
         stage('Deploy with Helm') {
             steps {
                 script {
-                    withEnv(["KUBECONFIG=${env.KUBECONFIG}"]) {
+                    withEnv(["KUBECONFIG=/home/ec2-user/.kube/config"]) {
                         sh """
                             helm upgrade --install my-python-app ./my-python-app-${CHART_VERSION}.tgz \
                             --set image.tag=${BUILD_NUMBER} \

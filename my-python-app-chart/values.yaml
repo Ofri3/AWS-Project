@@ -44,13 +44,14 @@ secretProviderClass:
   name: jenkins-secret-provider  # Specify the SecretProviderClass name created earlier
 
 extraVolumes:
-  - name: secret-volume
+  - name: secrets-store
     csi:
       driver: secrets-store.csi.k8s.io
+      readOnly: true
       volumeAttributes:
         secretProviderClass: jenkins-secret-provider
 
 extraVolumeMounts:
-  - name: secret-volume
-    mountPath: /mnt/secrets
+  - name: secrets-store
+    mountPath: /mnt/secrets  # Adjust as necessary
     readOnly: true

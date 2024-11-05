@@ -19,7 +19,7 @@ pipeline {
         DOCKER_COMPOSE_FILE = 'compose.yaml'
         AWS_REGION = 'us-east-2'
         ACCOUNT_ID = '023196572641'
-        APP_IMAGE = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/libermanofri/app-repo:app-image-${BUILD_NUMBER}"
+        APP_IMAGE = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/libermanofri/app-repo:app-image-0.3.${BUILD_NUMBER}"
         CHART_VERSION = "0.3.${BUILD_NUMBER}"
         KUBECONFIG = "/home/ec2-user/.kube/config"
     }
@@ -96,7 +96,7 @@ pipeline {
                     withEnv(["KUBECONFIG=/home/ec2-user/.kube/config"]) {
                         sh """
                             helm upgrade --install my-python-app ./my-python-app-${CHART_VERSION}.tgz \
-                            --set image.tag=${BUILD_NUMBER} \
+                            --set image.tag=app-image-0.3.${BUILD_NUMBER} \
                             --atomic --wait \
                             --namespace ofri-test
                         """

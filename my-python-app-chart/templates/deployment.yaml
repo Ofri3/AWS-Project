@@ -32,3 +32,10 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.env.TELEGRAM_TOKEN_SECRET }}
                   key: TELEGRAM_TOKEN
+          volumeMounts:  # Add this section
+            - name: secrets-volume
+              mountPath: /mnt/secrets  # Path inside the container where the secret will be available
+      volumes:  # Add this section
+        - name: secrets-volume
+          secret:
+            secretName: {{ .Values.env.TELEGRAM_TOKEN_SECRET }}  # Use the secret name from values.yaml

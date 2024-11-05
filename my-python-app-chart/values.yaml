@@ -35,3 +35,6 @@ ingress:
 
 env:
   TELEGRAM_TOKEN_SECRET: telegram-token-secret
+
+imagePullSecrets:
+  - name: ecr-registry-secret

@@ -4,7 +4,7 @@ replicaCount: 2
 
 image:
   repository: 023196572641.dkr.ecr.us-east-2.amazonaws.com/libermanofri/app-repo
-  tag: "app-image-0.3.${BUILD_NUMBER}"
+  tag: "app-image-${BUILD_NUMBER}"
   pullPolicy: IfNotPresent
 
 resources:

@@ -20,8 +20,8 @@ pipeline {
         AWS_REGION = 'us-east-2'
         ACCOUNT_ID = '023196572641'
         APP_IMAGE = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/libermanofri/app-repo:app-image-0.3.${BUILD_NUMBER}"
-        CHART_VERSION = "0.1.${BUILD_NUMBER}"
-        KUBECONFIG = "home/ec2-user/.kube/config"
+        CHART_VERSION = "0.3.${BUILD_NUMBER}"
+        KUBECONFIG = "/home/ec2-user/.kube/config"
     }
 
     stages {

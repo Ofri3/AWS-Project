@@ -41,7 +41,7 @@ imagePullSecrets:
 
 secretProviderClass:
   enabled: true
-  name: jenkins-secret-provider  # Specify the SecretProviderClass name created earlier
+  name: aws-secrets  # Match this with the name in your SecretProviderClass
 
 extraVolumes:
   - name: secrets-store
@@ -49,9 +49,9 @@ extraVolumes:
       driver: secrets-store.csi.k8s.io
       readOnly: true
       volumeAttributes:
-        secretProviderClass: jenkins-secret-provider
+        secretProviderClass: aws-secrets  # Use the correct name of the SecretProviderClass
 
 extraVolumeMounts:
   - name: secrets-store
-    mountPath: /mnt/secrets  # Adjust as necessary
+    mountPath: /mnt/secrets  # Mount the secrets here
     readOnly: true

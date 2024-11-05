@@ -27,3 +27,14 @@ spec:
               key: TELEGRAM_TOKEN        # The key in the secret that holds the Telegram token
       imagePullSecrets:
       - name: regcred  # Assuming you have an image pull secret for private Docker registry
+      volumeMounts:
+        - name: secrets-store
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "aws-secrets"

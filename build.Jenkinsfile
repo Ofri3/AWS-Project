@@ -104,5 +104,12 @@ pipeline {
                 }
             }
         }
+        stage('Trigger Freestyle Job') {
+            steps {
+                script {
+                    build job: 'Freestyle-SNS-Notifier', wait: false
+                }
+            }
+        }
     }
 }

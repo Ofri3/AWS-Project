@@ -19,7 +19,7 @@ pipeline {
         DOCKER_COMPOSE_FILE = 'compose.yaml'
         AWS_REGION = 'us-east-2'
         ACCOUNT_ID = '023196572641'
-        APP_IMAGE = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/app-repo:${BUILD_NUMBER}"
+        APP_IMAGE = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/app-repo:app-image-0.3.${BUILD_NUMBER}"
         CHART_VERSION = "0.1.${BUILD_NUMBER}"
         KUBECONFIG = "${env.WORKSPACE}/.kube/config"
     }
@@ -73,22 +73,34 @@ pipeline {
                     sh """
                     cd polybot
                     docker build -t ${APP_IMAGE_NAME}:latest .
-                    docker tag ${APP_IMAGE_NAME}:latest ${APP_IMAGE}:${BUILD_NUMBER}
-                    docker push ${APP_IMAGE}:${BUILD_NUMBER}}
+                    docker tag ${APP_IMAGE_NAME}:latest ${APP_IMAGE}
+                    docker push ${APP_IMAGE}
                     """
                 }
             }
         }
-        stage('Package and Deploy Helm Chart') {
+        stage('Package Helm Chart') {
             steps {
                 script {
+                    // Update the chart version in Chart.yaml and package the chart
                     sh """
                         sed -i 's/^version:.*/version: ${CHART_VERSION}/' my-python-app-chart/Chart.yaml
                         helm package ./my-python-app-chart
-                        helm upgrade --install my-python-app ./my-python-app-${CHART_VERSION}.tgz \
-                        --atomic --wait \
-                        --namespace ofri-test
                     """
+                }
+            }
+        }
+        stage('Deploy with Helm') {
+            steps {
+                script {
+                    withEnv(["KUBECONFIG=${env.KUBECONFIG}"]) {
+                        sh """
+                            helm upgrade --install my-python-app ./my-python-app-${CHART_VERSION}.tgz \
+                            --set image.tag=${BUILD_NUMBER} \
+                            --atomic --wait \
+                            --namespace ofri-test
+                        """
+                    }
                 }
             }
         }
